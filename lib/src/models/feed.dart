@@ -42,6 +42,10 @@ class Feed {
   /// Additional metadata
   final Map<String, dynamic> metadata;
 
+  /// Creates a new [Feed] instance with the given properties.
+  ///
+  /// The [items] and [format] parameters are required.
+  /// All other parameters are optional.
   Feed({
     this.title,
     this.description,

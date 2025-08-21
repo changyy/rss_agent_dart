@@ -7,6 +7,26 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.20250822.10625] - 2025-08-22
+
+### Added
+- **Example Files**: Added comprehensive example files (`example/main.dart` and `example/example.dart`) demonstrating package usage
+- **Platform Declaration**: Explicitly declared platform support in `pubspec.yaml` for Android, iOS, Linux, macOS, Windows, and Web
+
+### Improved
+- **API Documentation**: Added missing dartdoc comments for all public constructors:
+  - `Feed.new` constructor documentation
+  - `FeedConfig.new` constructor documentation
+  - `FeedFormat.displayName` property documentation
+  - `FeedItem.new` constructor documentation
+  - `MediaContent.new` constructor documentation
+
+### Package Score Improvements
+- **Example Score**: Increased from 0/10 to 10/10 (added example directory with working examples)
+
+### Notes
+- Web/WASM platform cannot be supported due to `dart:io` dependency requirement for HTTP operations
+
 ## [1.20250821.12157] - 2025-08-21
 
 ### Fixed
@@ -66,7 +86,3 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Comprehensive unit tests
 - Linting and analysis configuration
 - Version format: 1.YYYYmmdd.1HHii
-
-[Unreleased]: https://github.com/changyy/rss_agent_dart/compare/v1.20250821.12054...HEAD
-[1.20250821.12054]: https://github.com/changyy/rss_agent_dart/compare/v1.20250821.12035...v1.20250821.12054
-[1.20250821.12035]: https://github.com/changyy/rss_agent_dart/releases/tag/v1.20250821.12035

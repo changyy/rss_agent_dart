@@ -24,6 +24,10 @@ class MediaContent {
   /// Media duration in seconds (for audio/video)
   final int? duration;
 
+  /// Creates a new [MediaContent] instance with the given properties.
+  ///
+  /// The [url] parameter is required and specifies the media resource location.
+  /// All other parameters are optional and provide additional metadata about the media.
   MediaContent({
     required this.url,
     this.type,

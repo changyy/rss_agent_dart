@@ -12,6 +12,7 @@ enum FeedFormat {
   /// Unknown/unsupported format
   unknown('Unknown');
 
+  /// The human-readable display name for this feed format.
   final String displayName;
 
   const FeedFormat(this.displayName);

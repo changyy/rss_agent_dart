@@ -29,6 +29,10 @@ class FeedConfig {
   /// Feed-specific user agent
   final String? userAgent;
 
+  /// Creates a new [FeedConfig] instance with the given properties.
+  ///
+  /// The [url] parameter is required and specifies the feed URL to monitor.
+  /// All other parameters have sensible defaults for typical feed monitoring scenarios.
   FeedConfig({
     required this.url,
     this.interval = const Duration(minutes: 30),

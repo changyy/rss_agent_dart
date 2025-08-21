@@ -35,6 +35,10 @@ class FeedItem {
   /// Additional metadata
   final Map<String, dynamic> metadata;
 
+  /// Creates a new [FeedItem] instance with the given properties.
+  ///
+  /// All parameters are optional, allowing for flexible item creation
+  /// based on the available data from different feed formats.
   FeedItem({
     this.title,
     this.description,
