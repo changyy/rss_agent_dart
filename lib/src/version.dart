@@ -1,13 +1,13 @@
 /// Version information for RSS Agent
 class RssAgentVersion {
   /// Current version of RSS Agent
-  static const String version = '1.20250821.12054';
+  static const String version = '1.20250821.12157';
 
   /// Build date in YYYYMMDD format
   static const String buildDate = '20250821';
 
   /// Build time in HHmm format
-  static const String buildTime = '2054';
+  static const String buildTime = '2157';
 
   /// Full version string
   static String get fullVersion => 'RSS Agent v$version';

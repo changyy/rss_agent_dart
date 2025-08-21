@@ -1,6 +1,6 @@
 name: rss_agent
 description: A comprehensive RSS/Atom/JSON Feed monitoring service for Dart and Flutter. Provides automatic monitoring, diff detection, smart scheduling, and real-time notifications.
-version: 1.20250821.12054
+version: 1.20250821.12157
 repository: https://github.com/changyy/rss_agent_dart
 homepage: https://github.com/changyy/rss_agent_dart
 issue_tracker: https://github.com/changyy/rss_agent_dart/issues
