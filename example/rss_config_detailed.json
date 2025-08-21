@@ -1,0 +1,36 @@
+{
+  "title": "Demo Content Aggregator",
+  "description": "Sample aggregated content from various demo sources",
+  "link": "https://demo-aggregator.example.com",
+  "language": "en-us",
+  "author": "editor@demo-aggregator.example.com",
+  "copyright": "Copyright 2025 Demo Content Aggregator",
+  "categories": ["demo", "sample", "testing"],
+  "urls": [
+    {
+      "url": "https://mock-tech.example.org/latest",
+      "title": "Mock Tech News Portal",
+      "description": "Sample technology news and innovation updates",
+      "categories": ["technology", "innovation"]
+    },
+    {
+      "url": "https://demo-projects.example.net/showcase",
+      "title": "Demo Project Showcase",
+      "description": "Featured demo projects and code samples",
+      "categories": ["projects", "showcase"]
+    },
+    {
+      "url": "https://sample-forum.example.io/discussions",
+      "title": "Sample Community Forum",
+      "description": "Demo community discussions and Q&A",
+      "categories": ["community", "discussion"]
+    },
+    {
+      "url": "https://test-learning.example.co/tutorials",
+      "title": "Test Learning Resources",
+      "description": "Sample tutorials and educational content",
+      "author": "education@test-learning.example.co",
+      "categories": ["education", "tutorials", "learning"]
+    }
+  ]
+}

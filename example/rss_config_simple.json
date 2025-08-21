@@ -1,0 +1,12 @@
+{
+  "title": "My Demo Bookmarks",
+  "description": "A sample RSS feed generated from demo URLs",
+  "link": "https://demo-site.example.com",
+  "language": "en-us",
+  "author": "demo@example.com",
+  "urls": [
+    "https://sample-news.example.org/today",
+    "https://demo-tech.example.net/articles",
+    "https://mock-community.example.io/discussions"
+  ]
+}

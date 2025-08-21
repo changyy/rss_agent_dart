@@ -1,0 +1,34 @@
+[
+  {
+    "url": "https://demo-news.example.com/rss.xml",
+    "name": "Demo News Site",
+    "category": "general_news",
+    "description": "Example RSS feed for demonstration purposes",
+    "priority": "high",
+    "update_frequency": "hourly"
+  },
+  {
+    "url": "https://sample-blog.example.org/feed.xml",
+    "name": "Sample Tech Blog",
+    "category": "technology", 
+    "description": "Sample RSS feed for tech blog content",
+    "priority": "medium",
+    "update_frequency": "daily"
+  },
+  {
+    "url": "https://test-site.example.net/latest.rss",
+    "name": "Test Content Hub",
+    "category": "mixed_content",
+    "description": "Test RSS feed with various content types",
+    "priority": "low",
+    "update_frequency": "weekly"
+  },
+  {
+    "url": "https://mock-journal.example.io/articles.xml",
+    "name": "Mock Academic Journal",
+    "category": "research",
+    "description": "Mock RSS feed for academic article updates",
+    "priority": "medium",
+    "update_frequency": "monthly"
+  }
+]
