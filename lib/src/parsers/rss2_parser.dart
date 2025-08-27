@@ -166,7 +166,7 @@ class Rss2Parser {
   }
 
   DateTime _parseRfc822Date(String dateString) {
-    // RFC 822 format: "Wed, 21 Aug 2025 12:00:00 GMT"
+    // RFC 822 format: "Wed, 21 Aug 2025 12:00:00 GMT" or "Thu, 28 Aug 2025 00:46:04 +0800"
     final patterns = [
       RegExp(
           r'^\w+,\s+(\d{1,2})\s+(\w{3})\s+(\d{4})\s+(\d{1,2}):(\d{2}):(\d{2})\s+(.+)$'),
@@ -183,15 +183,62 @@ class Rss2Parser {
         final hour = int.parse(match.group(4)!);
         final minute = int.parse(match.group(5)!);
         final second = int.parse(match.group(6)!);
+        final timezoneStr = match.group(7)!.trim();
 
         final month = _parseMonth(monthStr);
         if (month != null) {
-          return DateTime.utc(year, month, day, hour, minute, second);
+          // Parse timezone and convert to UTC
+          final offsetMinutes = _parseTimezoneOffset(timezoneStr);
+          final localDateTime =
+              DateTime(year, month, day, hour, minute, second);
+          final utcDateTime =
+              localDateTime.subtract(Duration(minutes: offsetMinutes));
+          // Use DateTime.utc to ensure the result is properly marked as UTC
+          return DateTime.utc(
+            utcDateTime.year,
+            utcDateTime.month,
+            utcDateTime.day,
+            utcDateTime.hour,
+            utcDateTime.minute,
+            utcDateTime.second,
+            utcDateTime.millisecond,
+            utcDateTime.microsecond,
+          );
         }
       }
     }
 
     throw FormatException('Unable to parse RFC 822 date: $dateString');
+  }
+
+  /// Parse timezone offset and return offset in minutes from UTC
+  /// Supports formats like: +0800, -0500, +0930, GMT, UTC, EST, etc.
+  int _parseTimezoneOffset(String timezone) {
+    // Handle numeric formats: +0800, -0500, +0930, etc.
+    final numericPattern = RegExp(r'^([+-])(\d{2})(\d{2})$');
+    final numericMatch = numericPattern.firstMatch(timezone);
+
+    if (numericMatch != null) {
+      final sign = numericMatch.group(1) == '+' ? 1 : -1;
+      final hours = int.parse(numericMatch.group(2)!);
+      final minutes = int.parse(numericMatch.group(3)!);
+      return sign * (hours * 60 + minutes);
+    }
+
+    // Handle text formats: GMT, UTC, EST, PST, etc.
+    const timezoneOffsets = {
+      'GMT': 0, 'UTC': 0,
+      'EST': -300, 'EDT': -240, // Eastern Standard/Daylight Time
+      'CST': -360, 'CDT': -300, // Central Standard/Daylight Time
+      'MST': -420, 'MDT': -360, // Mountain Standard/Daylight Time
+      'PST': -480, 'PDT': -420, // Pacific Standard/Daylight Time
+      'BST': 60, // British Summer Time
+      'CET': 60, 'CEST': 120, // Central European Time/Summer Time
+      'JST': 540, // Japan Standard Time
+      'KST': 540, // Korea Standard Time
+    };
+
+    return timezoneOffsets[timezone.toUpperCase()] ?? 0;
   }
 
   int? _parseMonth(String monthStr) {

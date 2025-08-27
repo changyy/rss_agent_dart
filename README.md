@@ -44,16 +44,16 @@ Analyze individual RSS feeds:
 
 ```bash
 # Analyze a feed with pretty output (default)
-dart run rss_agent bin/rss_analyzer.dart https://news.google.com/rss
+dart run rss_agent:rss_analyzer https://news.google.com/rss
 
 # Analyze with JSON output  
-dart run rss_agent bin/rss_analyzer.dart https://feeds.bbci.co.uk/news/rss.xml --format json
+dart run rss_agent:rss_analyzer https://feeds.bbci.co.uk/news/rss.xml --format json
 
 # Verbose output with processing details
-dart run rss_agent bin/rss_analyzer.dart https://rss.cnn.com/rss/edition.rss --verbose
+dart run rss_agent:rss_analyzer https://rss.cnn.com/rss/edition.rss --verbose
 
 # Get help
-dart run rss_agent bin/rss_analyzer.dart --help
+dart run rss_agent:rss_analyzer --help
 ```
 
 #### Batch RSS Analyzer
@@ -63,16 +63,16 @@ Process multiple RSS feeds from JSON array input:
 ```bash
 # From file with simple URL array
 echo '["https://feeds.bbci.co.uk/news/rss.xml", "https://rss.cnn.com/rss/edition.rss"]' > feeds.json
-dart run rss_agent bin/rss_batch_analyzer.dart --input feeds.json --format json
+dart run rss_agent:rss_batch_analyzer --input feeds.json --format json
 
 # From stdin with metadata objects
-echo '[{"url": "https://feeds.bbci.co.uk/news/rss.xml", "name": "BBC News", "category": "news"}]' | dart run rss_agent bin/rss_batch_analyzer.dart --verbose
+echo '[{"url": "https://feeds.bbci.co.uk/news/rss.xml", "name": "BBC News", "category": "news"}]' | dart run rss_agent:rss_batch_analyzer --verbose
 
 # High concurrency processing
-dart run rss_agent bin/rss_batch_analyzer.dart --input feeds.json --concurrent 5
+dart run rss_agent:rss_batch_analyzer --input feeds.json --concurrent 5
 
 # Get help
-dart run rss_agent bin/rss_batch_analyzer.dart --help
+dart run rss_agent:rss_batch_analyzer --help
 ```
 
 **JSON Input Formats:**
