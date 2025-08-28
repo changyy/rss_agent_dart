@@ -1,7 +1,114 @@
+import 'package:test/test.dart';
 import 'package:rss_agent/src/parsers/rss2_parser.dart';
 
-/// 時間轉換驗證工具
-/// 用於測試 RSS pubDate 的時區解析是否正確
+/// 時間轉換驗證工具測試
+void main() {
+  group('TimezoneValidator', () {
+    late TimezoneValidator validator;
+
+    setUp(() {
+      validator = TimezoneValidator();
+    });
+
+    test('should parse +0800 timezone correctly', () {
+      final result = validator.validate('Thu, 28 Aug 2025 00:46:04 +0800');
+
+      expect(result.success, isTrue);
+      expect(result.parsed, isNotNull);
+      expect(result.expected, isNotNull);
+      expect(result.timezoneInfo, isNotNull);
+      expect(result.timezoneInfo!.offsetMinutes, equals(480)); // +8 hours
+      expect(result.timezoneInfo!.type, equals('numeric'));
+    });
+
+    test('should parse GMT timezone correctly', () {
+      final result = validator.validate('Wed, 27 Aug 2025 15:30:00 GMT');
+
+      expect(result.success, isTrue);
+      expect(result.parsed, isNotNull);
+      expect(result.expected, isNotNull);
+      expect(result.timezoneInfo!.offsetMinutes, equals(0)); // GMT = UTC+0
+      expect(result.timezoneInfo!.type, equals('text'));
+    });
+
+    test('should parse JST timezone correctly', () {
+      final result = validator.validate('Sat, 30 Aug 2025 09:15:00 JST');
+
+      expect(result.success, isTrue);
+      expect(result.parsed, isNotNull);
+      expect(result.expected, isNotNull);
+      expect(result.timezoneInfo!.offsetMinutes, equals(540)); // +9 hours
+      expect(result.timezoneInfo!.type, equals('text'));
+    });
+
+    test('should parse EST timezone correctly', () {
+      final result = validator.validate('Fri, 29 Aug 2025 14:22:33 EST');
+
+      expect(result.success, isTrue);
+      expect(result.parsed, isNotNull);
+      expect(result.expected, isNotNull);
+      expect(result.timezoneInfo!.offsetMinutes, equals(-300)); // -5 hours
+      expect(result.timezoneInfo!.type, equals('text'));
+    });
+
+    test('should parse negative timezone correctly', () {
+      final result = validator.validate('Wed, 27 Aug 2025 12:00:00 -0500');
+
+      expect(result.success, isTrue);
+      expect(result.parsed, isNotNull);
+      expect(result.expected, isNotNull);
+      expect(result.timezoneInfo!.offsetMinutes, equals(-300)); // -5 hours
+      expect(result.timezoneInfo!.type, equals('numeric'));
+    });
+
+    test('should parse Australian timezone correctly', () {
+      final result = validator.validate('Thu, 28 Aug 2025 10:30:00 +0930');
+
+      expect(result.success, isTrue);
+      expect(result.parsed, isNotNull);
+      expect(result.expected, isNotNull);
+      expect(result.timezoneInfo!.offsetMinutes, equals(570)); // +9.5 hours
+      expect(result.timezoneInfo!.type, equals('numeric'));
+    });
+
+    test('should handle batch validation', () {
+      final testCases = [
+        'Thu, 28 Aug 2025 00:46:04 +0800',
+        'Wed, 27 Aug 2025 12:00:00 -0500',
+        'Wed, 27 Aug 2025 15:30:00 GMT',
+      ];
+
+      final results = validator.validateBatch(testCases);
+
+      expect(results, hasLength(3));
+      expect(results.every((r) => r.success), isTrue);
+    });
+
+    test('should handle invalid date format gracefully', () {
+      final result = validator.validate('Invalid date format');
+
+      expect(result.success, isFalse);
+      expect(result.error, isNotNull);
+      expect(result.parsed, isNull);
+    });
+
+    test('should analyze timezone info correctly', () {
+      final validator = TimezoneValidator();
+
+      // Test numeric timezone
+      final result1 = validator.validate('Thu, 28 Aug 2025 00:46:04 +0800');
+      expect(result1.timezoneInfo!.original, equals('+0800'));
+      expect(result1.timezoneInfo!.description, contains('UTC+08:00'));
+
+      // Test text timezone
+      final result2 = validator.validate('Wed, 27 Aug 2025 15:30:00 GMT');
+      expect(result2.timezoneInfo!.original, equals('GMT'));
+      expect(result2.timezoneInfo!.description, contains('GMT'));
+    });
+  });
+}
+
+/// 時間轉換驗證工具類（測試輔助）
 class TimezoneValidator {
   final Rss2Parser _parser = Rss2Parser();
 
@@ -228,87 +335,4 @@ class ValidationResult {
     this.timezoneInfo,
     this.error,
   });
-
-  @override
-  String toString() {
-    final buffer = StringBuffer()..writeln('🔍 輸入: $input');
-
-    if (timezoneInfo != null) {
-      buffer.writeln(
-          '⏰ 時區: ${timezoneInfo!.original} (${timezoneInfo!.description})');
-    }
-
-    if (parsed != null) {
-      buffer.writeln('📊 解析結果: $parsed (${parsed!.isUtc ? 'UTC' : 'Local'})');
-    }
-
-    if (expected != null) {
-      buffer.writeln('✅ 預期結果: $expected UTC');
-    }
-
-    buffer.writeln('${success ? '✅' : '❌'} 狀態: ${success ? '正確' : '錯誤'}');
-
-    if (error != null) {
-      buffer.writeln('❗ 錯誤: $error');
-    }
-
-    if (parsed != null && expected != null) {
-      final diff = parsed!.difference(expected!);
-      buffer.writeln('⏱️  時差: ${diff.inHours} 小時 ${diff.inMinutes % 60} 分鐘');
-    }
-
-    return buffer.toString();
-  }
-}
-
-/// 命令行工具主函數
-void main(List<String> args) {
-  final validator = TimezoneValidator();
-
-  if (args.isEmpty) {
-    // 預設測試案例
-    final testCases = [
-      'Thu, 28 Aug 2025 00:46:04 +0800', // 台北時間
-      'Wed, 27 Aug 2025 12:00:00 -0500', // 美東時間
-      'Thu, 28 Aug 2025 10:30:00 +0930', // 澳洲阿德雷德時間
-      'Wed, 27 Aug 2025 15:30:00 GMT', // GMT
-      'Wed, 27 Aug 2025 20:15:00 UTC', // UTC
-      'Fri, 29 Aug 2025 14:22:33 EST', // 美東標準時間
-      'Sat, 30 Aug 2025 09:15:00 JST', // 日本標準時間
-    ];
-
-    print('=== RSS pubDate 時區解析驗證工具 ===\n');
-    print('📋 運行預設測試案例...\n');
-
-    for (var i = 0; i < testCases.length; i++) {
-      print('--- 測試案例 ${i + 1} ---');
-      final result = validator.validate(testCases[i]);
-      print(result);
-      print('');
-    }
-
-    // 統計
-    final results = validator.validateBatch(testCases);
-    final successCount = results.where((r) => r.success).length;
-    final totalCount = results.length;
-
-    print('=== 統計結果 ===');
-    print('✅ 正確: $successCount');
-    print('❌ 錯誤: ${totalCount - successCount}');
-    print('📈 正確率: ${(successCount / totalCount * 100).toStringAsFixed(1)}%');
-
-    if (successCount < totalCount) {
-      print('\n⚠️  發現時區解析問題！建議修復 RFC 2822 解析器。');
-    }
-  } else {
-    // 驗證用戶提供的時間字串
-    print('=== RSS pubDate 時區解析驗證工具 ===\n');
-
-    for (final dateStr in args) {
-      print('--- 驗證: $dateStr ---');
-      final result = validator.validate(dateStr);
-      print(result);
-      print('');
-    }
-  }
 }

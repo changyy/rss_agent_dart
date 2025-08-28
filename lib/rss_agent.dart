@@ -22,6 +22,7 @@ export 'src/generators/rss2_generator.dart';
 
 // Export agent components
 // export 'src/agent/rss_agent.dart';
+export 'src/agent/base_rss_agent.dart';
 export 'src/agent/monitor_strategy.dart';
 // export 'src/agent/feed_monitor.dart';
 // export 'src/agent/diff_detector.dart';
@@ -34,4 +35,7 @@ export 'src/agent/monitor_strategy.dart';
 
 // Export utils
 export 'src/utils/http_client.dart';
-// export 'src/utils/cache_manager.dart';
+export 'src/utils/cache_manager.dart';
+
+// Export CLI tools
+export 'src/cli/base_cli_tool.dart';

@@ -7,6 +7,102 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.20250828.12055] - 2025-08-28
+
+### Enhanced
+- **JSON-Based Version Management**: Revolutionized version management system for better maintainability
+  - Version information now stored in JSON format within `_versionInfoJson` constant
+  - Program code structure remains completely unchanged, only JSON data is updated
+  - Smart fallback mechanism with obvious indicators (`1.0.0`, `19700101T0000`, `fallback`)
+  - Universal version updater (`bin/update_version.dart`) supports both base and derived packages
+  - Auto-detection of package type (base RSS Agent vs derived packages)
+  - Preserves all existing APIs while improving underlying architecture
+
+### Improved
+- **Version Update Tool**: Single universal tool for all RSS Agent packages
+  - **Base Package Mode**: Supports RSS Agent format (`1.YYYYmmdd.1HHii`) with auto-generation
+  - **Derived Package Mode**: Supports semantic versioning with dependency tracking
+  - **JSON-Only Updates**: Only updates version JSON, preserves all code structure
+  - **Automatic Detection**: Intelligently detects package type from `pubspec.yaml`
+  - **Cross-Platform**: Works consistently across all supported platforms
+
+### Technical Improvements
+- **Fallback Safety**: Clear fallback values for JSON parsing failures
+  - Base package: `1.0.0` version, `19700101T0000` timestamp (Unix epoch)
+  - Derived packages: `0.0.0` version, `1970-01-01T00:00:00.000Z` timestamp
+  - Dependencies marked as `'fallback'` for easy identification
+- **Code Quality**: Fixed all linter issues, achieved 0 warnings
+- **Test Coverage**: Enhanced version tests with BaseVersionInfo interface validation
+- **Architecture**: Maintains full backward compatibility while enabling future expansion
+
+## [1.20250828.12035] - 2025-08-28
+
+### Added
+- **Cache Management System**: Complete file-based caching infrastructure for RSS agents
+  - `CacheManager` class with MD5-based cache key generation
+  - `CacheConfig` with customizable cache directory, expiration time, and enable/disable options
+  - Cross-platform cache directory support (Windows, macOS, Linux)
+  - Cache statistics and cleanup functionality
+- **BaseRssAgent**: Abstract base class for RSS agents providing common functionality
+  - HTTP client management with automatic resource disposal
+  - RSS parsing using Rss2Parser
+  - Optional caching mechanism integration
+  - Error handling with RssAgentException
+  - Cache statistics and clearing methods
+- **BaseCLITool**: Shared CLI infrastructure for command-line tools
+  - Standardized argument parsing (help, version, format, cache, verbose)
+  - JSON output formatting with consistent result structure
+  - Cache configuration parsing from command line arguments
+  - Version information display with repository links
+  - Error handling and logging utilities
+
+### Enhanced
+- **Architecture**: Refactored to support extensible RSS agent ecosystem
+  - Base classes enable easy creation of future `rss_agent_for_xxx` packages
+  - Shared components reduce code duplication across implementations
+  - Consistent error handling and caching across all agents
+- **CLI Tools**: Enhanced command-line interface capabilities
+  - `--cache` parameter for custom cache directory specification
+  - `--cache-expired-time` for configurable cache expiration (default: 180 seconds)
+  - `--no-cache` flag to disable caching entirely
+  - `--verbose` flag for detailed operation logging
+- **Test Coverage**: Comprehensive test suite for new components
+  - 24 tests for CacheManager functionality (file operations, expiration, stats)
+  - 11 tests for BaseRssAgent (initialization, caching, disposal, error handling)
+  - 13 tests for BaseCLITool (argument parsing, JSON formatting, result creation)
+  - Cross-platform testing with temporary directory management
+
+### Technical Improvements
+- **Code Quality**: Fixed all 14 linter issues identified by `dart analyze`
+  - Removed dead code and unused imports
+  - Fixed string interpolation patterns
+  - Improved code formatting and type annotations
+  - Converted to super parameter syntax where applicable
+- **Dependency Management**: Added crypto package for MD5 hash generation
+- **Error Resilience**: Enhanced error handling with fallback to expired cache on network failures
+- **Memory Management**: Proper resource disposal patterns with dispose() methods
+
+### API Additions
+- **CacheConfig**: 
+  - `CacheConfig()` - Default configuration (enabled, 3 minutes expiration)
+  - `CacheConfig.disabled` - Completely disable caching
+  - `CacheConfig.custom()` - Custom cache settings
+- **BaseRssAgent**:
+  - `fetchFeed(String url)` - Fetch and parse RSS with optional caching
+  - `clearCache()` - Clear all cached content
+  - `getCacheStats()` - Get cache statistics
+  - `dispose()` - Clean up resources
+- **BaseCLITool**:
+  - `buildBaseArgParser()` - Create standard argument parser
+  - `parseCacheConfig()` - Parse cache configuration from CLI args
+  - `createResult()` - Create standardized success result
+  - `createErrorResult()` - Create standardized error result
+
+### Migration Support
+- **Backward Compatibility**: All existing APIs remain unchanged
+- **Extension Ready**: Framework prepared for creating domain-specific RSS agents
+- **Test Infrastructure**: TDD approach maintained with expanded test coverage (total: 186 tests)
+
 ## [1.20250828.10740] - 2025-08-28
 
 ### Fixed
